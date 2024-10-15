@@ -72,3 +72,34 @@ yarn-error.log
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+# Dependencies
+/node_modules
+
+# Build files
+/android/app/build
+/ios/build
+
+# Environment variables
+.env
+
+# IDE files
+.vscode
+.idea
+
+# iOS
+/ios/Pods
+
+# Android
+/android/.gradle
+/android/app/release
+*.hprof
+
+
+# Misc
+.DS_Store
+*.log
+
+# Firebase configuration files
+google-services.json
+GoogleService-Info.plist

@@ -1,118 +1,123 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons'; // Importing Ionicons from react-native-vector-icons
+import SettingsScreen from './screens/SettingsScreen';
+import HomeScreen from './screens/HomeScreen';
 
-import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+// TODO: Import and initialize Firebase here if needed
+// import { initializeApp } from 'firebase/app';
+// const firebaseConfig = { ... };
+// const app = initializeApp(firebaseConfig);
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+type TabName = 'Home' | 'Analytics' | 'Camera' | 'Settings';
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
-
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
+interface TabButtonProps {
+  name: TabName;
+  icon: string;
+  isActive: boolean;
+  onPress: () => void;
 }
 
-function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+const TabButton: React.FC<TabButtonProps> = ({ name, icon, isActive, onPress }) => (
+  <TouchableOpacity style={styles.tabButton} onPress={onPress}>
+    <Icon
+      name={icon}
+      size={24}
+      color={isActive ? '#3498db' : '#7f8c8d'}
+    />
+    <Text style={[styles.tabText, isActive && styles.activeTabText]}>{name}</Text>
+  </TouchableOpacity>
+);
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+const TabContent: React.FC<{ name: TabName }> = ({ name }) => (
+  <View style={styles.tabContent}>
+    <Text style={styles.tabContentText}>{name} Screen</Text>
+  </View>
+);
+
+export default function App() {
+  const [activeTab, setActiveTab] = useState<TabName>('Home');
+
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case 'Home':
+        return <HomeScreen />;
+      case 'Analytics':
+        return <TabContent name="Analytics" />;
+      case 'Camera':
+        return <TabContent name="Camera" />;
+      case 'Settings':
+        return <SettingsScreen />;
+      default:
+        return null;
+    }
   };
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
+    <SafeAreaView style={styles.container}>
+      {renderTabContent()}
+      <View style={styles.tabBar}>
+        <TabButton
+          name="Home"
+          icon="home-outline"
+          isActive={activeTab === 'Home'}
+          onPress={() => setActiveTab('Home')}
+        />
+        <TabButton
+          name="Analytics"
+          icon="bar-chart-outline"
+          isActive={activeTab === 'Analytics'}
+          onPress={() => setActiveTab('Analytics')}
+        />
+        <TabButton
+          name="Camera"
+          icon="camera-outline"
+          isActive={activeTab === 'Camera'}
+          onPress={() => setActiveTab('Camera')}
+        />
+        <TabButton
+          name="Settings"
+          icon="settings-outline"
+          isActive={activeTab === 'Settings'}
+          onPress={() => setActiveTab('Settings')}
+        />
+      </View>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
   },
-  sectionTitle: {
+  tabBar: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    borderTopWidth: 1,
+    borderTopColor: '#e0e0e0',
+    backgroundColor: '#f8f8f8',
+    paddingVertical: 8,
+  },
+  tabButton: {
+    alignItems: 'center',
+  },
+  tabText: {
+    fontSize: 12,
+    marginTop: 4,
+    color: '#7f8c8d',
+  },
+  activeTabText: {
+    color: '#3498db',
+  },
+  tabContent: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  tabContentText: {
     fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
+    fontWeight: 'bold',
   },
 });
-
-export default App;
