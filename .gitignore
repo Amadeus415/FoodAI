@@ -103,3 +103,28 @@ yarn-error.log
 # Firebase configuration files
 google-services.json
 GoogleService-Info.plist
+
+# Python virtual environment
+/functions/venv/
+
+# Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Local development settings
+/functions/.env
+
+# Logs
+/functions/*.log
+
+# Temporary files
+/functions/*.tmp
+
+# OS generated files
+.DS_Store
+Thumbs.db
